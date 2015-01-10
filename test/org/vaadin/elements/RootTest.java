@@ -32,6 +32,23 @@ public class RootTest {
     }
 
     @Test
+    public void testAppendChildOrder() {
+        child.appendChild(Elements.create("first"));
+        child.appendChild(Elements.create("second"));
+
+        root.appendChild(child);
+
+        JsonArray pendingCommands = root.flushPendingCommands();
+
+        Assert.assertEquals(
+                "[[\"createElement\",2,\"div\"],[\"appendChild\",0,2],"
+                        + "[\"createElement\",4,\"first\"],[\"appendChild\",2,4],"
+                        + "[\"createElement\",6,\"second\"],[\"appendChild\",2,6]]",
+                pendingCommands.toJson());
+
+    }
+
+    @Test
     public void testRemoveChild() {
         root.appendChild(child);
         root.flushPendingCommands();

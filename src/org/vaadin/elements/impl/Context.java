@@ -1,7 +1,9 @@
 package org.vaadin.elements.impl;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.IdentityHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +58,13 @@ public class Context {
     }
 
     public void adoptAll(NodeImpl child) {
-        List<NodeImpl> stack = new ArrayList<>();
-        stack.add(child);
+        Deque<NodeImpl> queue = new LinkedList<>();
+        queue.add(child);
 
-        while (!stack.isEmpty()) {
-            NodeImpl node = stack.remove(stack.size() - 1);
+        while (!queue.isEmpty()) {
+            NodeImpl node = queue.removeFirst();
             // Find child nodes with old context
-            stack.addAll(node.getChildren());
+            queue.addAll(node.getChildren());
 
             adopt(node);
         }
