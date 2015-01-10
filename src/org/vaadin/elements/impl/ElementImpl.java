@@ -64,7 +64,7 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public void setAttribute(String name, String value) {
         org.jsoup.nodes.Element element = getElement();
-        if (Objects.equal(value, element.attr(name))) {
+        if (Objects.equal(value, getAttribute(name))) {
             return;
         }
 
@@ -89,6 +89,9 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public String getAttribute(String name) {
+        if (!getElement().hasAttr(name)) {
+            return null;
+        }
         return getElement().attr(name);
     }
 
