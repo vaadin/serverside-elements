@@ -66,6 +66,10 @@ public class Demo extends UI {
         PaperButton disabledButton = PaperButton.create("Disabled");
         disabledButton.setDisabled(true);
 
+        PaperSlider slider = PaperSlider.create();
+        root.appendChild(slider);
+        slider.setValue(50);
+
         root.appendChild(basicButton);
         root.appendChild(notRaisedButton);
         root.appendChild(noInkButton);

@@ -55,9 +55,17 @@ public class ElementReflectHelper {
                         && method.getParameterCount() == 0) {
                     name = ElementReflectHelper.getPropertyName(name);
 
-                    if (method.getReturnType() == String.class) {
+                    Class<?> type = method.getReturnType();
+                    if (type == String.class) {
                         return element.getAttribute(name);
-                    } else if (method.getReturnType() == boolean.class) {
+                    } else if (type == double.class) {
+                        String value = element.getAttribute(name);
+                        if (value == null || value.isEmpty()) {
+                            return Double.valueOf(0);
+                        } else {
+                            return Double.valueOf(value);
+                        }
+                    } else if (type == boolean.class) {
                         return element.hasAttribute(name);
                     }
                 } else if (name.startsWith("set")
@@ -67,12 +75,16 @@ public class ElementReflectHelper {
 
                     if (type == String.class) {
                         element.setAttribute(name, (String) args[0]);
-                        return null;
+                    } else if (type == double.class) {
+                        element.setAttribute(name, args[0].toString());
                     } else if (type == boolean.class) {
                         element.setAttribute(name,
                                 ((Boolean) args[0]).booleanValue());
-                        return null;
+                    } else {
+                        throw new RuntimeException(
+                                "Property type not supported for " + method);
                     }
+                    return null;
                 }
 
                 throw new RuntimeException("Unsupported method: " + method);
