@@ -32,6 +32,8 @@ public interface Element extends Node {
 
     public void eval(String script, Object... arguments);
 
+    public void bindAttribute(String attributeName, String eventName);
+
     public void addEventListener(String eventName, JavaScriptFunction listener,
             String... arguments);
 

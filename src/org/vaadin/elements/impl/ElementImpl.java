@@ -156,6 +156,13 @@ public class ElementImpl extends NodeImpl implements Element {
     }
 
     @Override
+    public void bindAttribute(String attributeName, String eventName) {
+        addEventListener(eventName, arguments -> {
+            getElement().attr(attributeName, arguments.getString(0));
+        }, "''+e." + attributeName);
+    }
+
+    @Override
     public void addEventListener(String eventName, JavaScriptFunction listener,
             String... arguments) {
         String argumentBuilder = String.join(",", arguments);

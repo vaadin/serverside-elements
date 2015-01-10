@@ -11,6 +11,7 @@ import net.sf.cglib.proxy.NoOp;
 
 import org.vaadin.elements.Element;
 import org.vaadin.elements.Elements;
+import org.vaadin.elements.UpdatedBy;
 
 public class ElementReflectHelper {
 
@@ -51,8 +52,7 @@ public class ElementReflectHelper {
                 ElementImpl element = (ElementImpl) obj;
                 String name = method.getName();
 
-                if ((name.startsWith("get") || name.startsWith("is"))
-                        && method.getParameterCount() == 0) {
+                if (isGetter(method)) {
                     name = ElementReflectHelper.getPropertyName(name);
 
                     Class<?> type = method.getReturnType();
@@ -106,11 +106,27 @@ public class ElementReflectHelper {
         enhancer.setCallbackFilter(callbackHelper);
         enhancer.setCallbacks(callbackHelper.getCallbacks());
 
-        Object instance = enhancer.create(
+        T instance = type.cast(enhancer.create(
                 new Class[] { org.jsoup.nodes.Element.class },
-                new Object[] { soupElement });
+                new Object[] { soupElement }));
 
-        return type.cast(instance);
+        for (Method method : type.getMethods()) {
+            if (isGetter(method)) {
+                for (UpdatedBy updatedBy : method
+                        .getAnnotationsByType(UpdatedBy.class)) {
+                    instance.bindAttribute(getPropertyName(method.getName()),
+                            updatedBy.value());
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private static boolean isGetter(Method method) {
+        String name = method.getName();
+        return (name.startsWith("get") || name.startsWith("is"))
+                && method.getParameterCount() == 0;
     }
 
     public static String getPropertyName(String name) {

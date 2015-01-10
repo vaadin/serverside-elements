@@ -69,6 +69,9 @@ public class Demo extends UI {
         PaperSlider slider = PaperSlider.create();
         root.appendChild(slider);
         slider.setValue(50);
+        slider.addEventListener("change", arguments -> {
+            Notification.show("Value changed to " + slider.getValue());
+        });
 
         root.appendChild(basicButton);
         root.appendChild(notRaisedButton);
