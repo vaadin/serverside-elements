@@ -27,7 +27,7 @@ public class RootTest {
         JsonArray pendingCommands = root.flushPendingCommands();
 
         Assert.assertEquals(
-                "[[\"createElement\",3,\"div\"],[\"appendChild\",0,3]]",
+                "[[\"createElement\",2,\"div\"],[\"appendChild\",0,2]]",
                 pendingCommands.toJson());
     }
 
@@ -40,7 +40,7 @@ public class RootTest {
 
         JsonArray pendingCommands = root.flushPendingCommands();
 
-        Assert.assertEquals("[[\"remove\",3]]", pendingCommands.toJson());
+        Assert.assertEquals("[[\"remove\",2]]", pendingCommands.toJson());
     }
 
 }
