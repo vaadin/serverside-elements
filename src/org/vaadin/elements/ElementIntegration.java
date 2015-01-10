@@ -25,9 +25,10 @@ public class ElementIntegration extends AbstractJavaScriptExtension {
     }
 
     private void getDom(JsonArray arguments) {
-        String html = arguments.getString(0);
+        int id = (int) arguments.getNumber(0);
+        JsonArray hierarchy = arguments.getArray(1);
 
-        root.init(html);
+        root.synchronize(id, hierarchy);
     }
 
     public Element getRoot() {

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,11 +37,13 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public void appendChild(Node child) {
         NodeImpl nodeImpl = (NodeImpl) child;
-        org.jsoup.nodes.Node soupChild = nodeImpl.node;
-
-        getElement().appendChild(soupChild);
+        appendSoupNode(nodeImpl);
 
         context.adoptAll(nodeImpl);
+    }
+
+    void appendSoupNode(NodeImpl child) {
+        getElement().appendChild(child.node);
     }
 
     private org.jsoup.nodes.Element getElement() {
@@ -311,5 +314,17 @@ public class ElementImpl extends NodeImpl implements Element {
                 return elements.size();
             }
         };
+    }
+
+    void resetChildren(ArrayList<NodeImpl> newChildren) {
+        HashSet<NodeImpl> oldChildren = new HashSet<>(getChildren());
+        oldChildren.removeAll(newChildren);
+        oldChildren.forEach(child -> child.node.remove());
+
+        getElement().children().remove();
+
+        for (NodeImpl child : newChildren) {
+            appendSoupNode(child);
+        }
     }
 }

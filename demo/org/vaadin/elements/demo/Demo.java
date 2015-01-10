@@ -43,15 +43,15 @@ public class Demo extends UI {
             root.fetchDom(() -> Notification.show(root.asHtml()));
         });
 
-        VerticalLayout layout = new VerticalLayout(button, new Label("Test"));
+        Label label = new Label("Test");
+        VerticalLayout layout = new VerticalLayout(button, label);
 
         setContent(layout);
 
         root.fetchDom(() -> {
             Optional<Element> span = root.querySelector("span > span");
             span.ifPresent(s -> s.setAttribute("style", "color: blue"));
-            System.out.println(root.asHtml());
-        }, layout);
+        }, layout, button, label);
     }
 
     private void demoNewElements(Root root) {
@@ -62,7 +62,7 @@ public class Demo extends UI {
         Element h1 = root.querySelector("h1").get();
 
         h1.addEventListener("click", arguments -> {
-            h1.setAttribute("style", "color: green");
+            h1.setAttribute("style", "color: blue");
         });
     }
 }

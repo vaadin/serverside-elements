@@ -53,6 +53,7 @@ window.org_vaadin_elements_ElementIntegration = function() {
 				if (id === undefined) {
 					id = nextId + "";
 					ids[id] = node;
+					node._eid = id;
 					nextId += 2;
 				}
 				
@@ -61,11 +62,12 @@ window.org_vaadin_elements_ElementIntegration = function() {
 						var result = [node.tagName.toLowerCase(), +id];
 						var attributes = node.attributes;
 						if (attributes.length) {
-							result.push({});
+							var attrs = {};
 							for(var i = 0; i < attributes.length; i++) {
 								var attr = attributes.item(i);
-								result[1][attr.name] = attr.value;
+								attrs[attr.name] = attr.value;
 							}
+							result.push(attrs);
 						}
 						
 						if (!node.tkPid || node.tkPid === rootTkPid || includePids.indexOf(node.tkPid) != -1) {
@@ -84,23 +86,8 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			}
 			
 			var encodedRoot = encodeNode(root);
-			console.log(JSON.stringify(encodedRoot));
 
-			// Recreate ids in iteration order
-			ids = {};
-			var id = 0;
-			
-			var stack = [ root ];
-			while (stack.length > 0) {
-				var node = stack.pop();
-				ids[id++] = node;
-				var childNodes = node.childNodes;
-				for (var i = childNodes.length - 1; i >= 0; i--) {
-					stack.push(childNodes[i]);
-				}
-			}
-
-			_self.getDom(root.outerHTML, id, encodedRoot);
+			_self.getDom(id, encodedRoot);
 		}
 	}
 
