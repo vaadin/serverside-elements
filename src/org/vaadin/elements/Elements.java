@@ -29,6 +29,7 @@ public class Elements {
 
     public static <T extends Element> T create(final Class<T> type) {
         String tagName = getElementTag(type);
+        registerElement(type);
         org.jsoup.nodes.Element soupElement = createSoupElement(tagName);
         return type.cast(ElementReflectHelper.wrap(soupElement));
     }

@@ -330,4 +330,14 @@ public class ElementImpl extends NodeImpl implements Element {
             appendSoupNode(child);
         }
     }
+
+    @Override
+    public void setDisabled(boolean disabled) {
+        setAttribute("disabled", disabled);
+    }
+
+    @Override
+    public boolean isDisabled() {
+        return hasAttribute("disabled");
+    }
 }

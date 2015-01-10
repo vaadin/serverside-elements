@@ -2,6 +2,7 @@ package org.vaadin.elements.demo;
 
 import java.util.Optional;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.elements.Element;
@@ -27,6 +28,14 @@ public class Demo extends UI {
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = Demo.class)
     public static class Servlet extends VaadinServlet {
+        @Override
+        protected void servletInitialized() throws ServletException {
+            super.servletInitialized();
+            // XXX Workaround until #9045 has been merged
+            getService().addSessionInitListener(
+                    e -> e.getSession().addBootstrapListener(
+                            new BootstrapListenerImplementation()));
+        }
     }
 
     @Override
@@ -35,7 +44,32 @@ public class Demo extends UI {
 
         // demoNewElements(root);
 
-        demoExistingElements(root);
+        // demoExistingElements(root);
+
+        demoPaperComponents(root);
+    }
+
+    private void demoPaperComponents(Root root) {
+        PaperButton basicButton = PaperButton.create("Basic button");
+        basicButton.setRaised(true);
+        basicButton.addEventListener("click", args -> {
+            Notification.show("Clicked");
+        });
+
+        PaperButton notRaisedButton = PaperButton.create("Not raised");
+        notRaisedButton.setRaised(false);
+
+        PaperButton noInkButton = PaperButton.create("No ink");
+        noInkButton.setRaised(true);
+        noInkButton.setNoink(true);
+
+        PaperButton disabledButton = PaperButton.create("Disabled");
+        disabledButton.setDisabled(true);
+
+        root.appendChild(basicButton);
+        root.appendChild(notRaisedButton);
+        root.appendChild(noInkButton);
+        root.appendChild(disabledButton);
     }
 
     private void demoExistingElements(Root root) {

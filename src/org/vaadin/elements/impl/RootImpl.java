@@ -7,12 +7,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.vaadin.elements.ElementIntegration;
 import org.vaadin.elements.Elements;
+import org.vaadin.elements.Import;
 import org.vaadin.elements.Node;
 import org.vaadin.elements.Root;
 import org.vaadin.elements.TextNode;
@@ -42,6 +45,8 @@ public class RootImpl extends ElementImpl implements Root {
 
     private final Map<Integer, Runnable> fetchDomCallbacks = new HashMap<>();
     private final Map<Integer, Component[]> fetchDomComponents = new HashMap<>();
+
+    private final Set<String> handledImports = new HashSet<>();
 
     public RootImpl(ElementIntegration owner) {
         super(new org.jsoup.nodes.Element(org.jsoup.parser.Tag.valueOf("div"),
@@ -108,6 +113,8 @@ public class RootImpl extends ElementImpl implements Root {
         nodeToId.put(child, id);
         idToNode.put(id, child);
 
+        resolveImports(child.getClass());
+
         // Enqueue initialization operations
         if (child instanceof ElementImpl) {
             ElementImpl e = (ElementImpl) child;
@@ -128,6 +135,16 @@ public class RootImpl extends ElementImpl implements Root {
         // Finally add append command
         addCommand("appendChild", child.getParent(),
                 Json.create(id.doubleValue()));
+    }
+
+    private void resolveImports(Class<? extends NodeImpl> type) {
+        Arrays.stream(type.getInterfaces())
+                .map(i -> i.getAnnotation(Import.class))
+                .filter(Objects::nonNull).map(Import::value)
+                .filter(url -> !handledImports.contains(url)).forEach(url -> {
+                    handledImports.add(url);
+                    addCommand("import", null, Json.create(url));
+                });
     }
 
     void setAttributeChange(ElementImpl element, String name) {

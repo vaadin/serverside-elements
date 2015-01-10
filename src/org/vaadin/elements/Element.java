@@ -43,4 +43,7 @@ public interface Element extends Node {
 
     List<Element> querySelectorAll(String query);
 
+    public void setDisabled(boolean disabled);
+
+    public boolean isDisabled();
 }

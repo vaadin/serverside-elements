@@ -32,6 +32,12 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			ids[id].remove();
 			delete ids[id];
 		},
+		import: function(url) {
+			var link = document.createElement("link");
+			link.setAttribute("rel", "import");
+			link.setAttribute("href", url);
+			document.body.appendChild(link);
+		},
 		eval : function(id, script, params, callbacks) {
 			callbacks.forEach(function(i) {
 				var callbackId = params[i];
