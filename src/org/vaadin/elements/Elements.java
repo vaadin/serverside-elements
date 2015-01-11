@@ -9,8 +9,16 @@ public class Elements {
 
     private static final Map<String, Class<? extends Element>> registeredElements = new ConcurrentHashMap<>();
 
+    static void clearRegistration() {
+        // For testing
+        registeredElements.clear();
+    }
+
     public static <T extends Element> void registerElement(Class<T> type) {
-        registeredElements.put(getElementTag(type), type);
+        String elementTag = getElementTag(type, true);
+        if (elementTag != null) {
+            registeredElements.put(elementTag, type);
+        }
     }
 
     public static Class<? extends Element> getRegisteredClass(String name) {
@@ -28,14 +36,18 @@ public class Elements {
     }
 
     public static <T extends Element> T create(final Class<T> type) {
-        String tagName = getElementTag(type);
+        String tagName = getElementTag(type, false);
         registerElement(type);
         org.jsoup.nodes.Element soupElement = createSoupElement(tagName);
-        return type.cast(ElementReflectHelper.wrap(soupElement));
+        return type.cast(ElementReflectHelper.wrap(soupElement, type));
     }
 
-    private static String getElementTag(final Class<?> type) {
+    private static String getElementTag(final Class<?> type,
+            boolean onlyExclusive) {
         Tag tag = type.getAnnotation(Tag.class);
+        if (onlyExclusive && !tag.exclusive()) {
+            return null;
+        }
         String value = tag.value();
         return value;
     }

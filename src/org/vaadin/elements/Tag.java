@@ -11,4 +11,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Tag {
     public String value();
+
+    public boolean exclusive() default true;
 }

@@ -16,6 +16,11 @@ import org.vaadin.elements.UpdatedBy;
 public class ElementReflectHelper {
 
     public static NodeImpl wrap(org.jsoup.nodes.Node soupNode) {
+        return wrap(soupNode, null);
+    }
+
+    public static NodeImpl wrap(org.jsoup.nodes.Node soupNode,
+            Class<? extends Element> elementType) {
         if (soupNode instanceof org.jsoup.nodes.TextNode) {
             return new TextNodeImpl((org.jsoup.nodes.TextNode) soupNode);
             // } else if (soupNode instanceof org.jsoup.nodes.DataNode) {
@@ -25,8 +30,9 @@ public class ElementReflectHelper {
             org.jsoup.nodes.Element soupElement = (org.jsoup.nodes.Element) soupNode;
             String tag = soupElement.tagName();
 
-            Class<? extends Element> elementType = Elements
-                    .getRegisteredClass(tag);
+            if (elementType == null) {
+                elementType = Elements.getRegisteredClass(tag);
+            }
             if (elementType == null) {
                 return new ElementImpl(soupElement);
             } else {
