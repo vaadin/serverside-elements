@@ -66,17 +66,27 @@ public class Demo extends UI {
         PaperButton disabledButton = PaperButton.create("Disabled");
         disabledButton.setDisabled(true);
 
+        Layout horizontal = Layout.horizontal();
+        horizontal.setJustified(true);
+        horizontal.setAttribute("style", "width: 600px");
+
+        horizontal.appendChild(basicButton);
+        horizontal.appendChild(notRaisedButton);
+        horizontal.appendChild(noInkButton);
+        horizontal.appendChild(disabledButton);
+
         PaperSlider slider = PaperSlider.create();
-        root.appendChild(slider);
         slider.setValue(50);
         slider.addEventListener("change", arguments -> {
             Notification.show("Value changed to " + slider.getValue());
         });
 
-        root.appendChild(basicButton);
-        root.appendChild(notRaisedButton);
-        root.appendChild(noInkButton);
-        root.appendChild(disabledButton);
+        Layout vertical = Layout.vertical();
+        vertical.appendChild(slider);
+        vertical.appendChild(horizontal);
+
+        root.appendChild(vertical);
+
     }
 
     private void demoExistingElements(Root root) {
