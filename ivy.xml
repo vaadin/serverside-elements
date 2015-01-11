@@ -40,7 +40,10 @@
 			
 		<dependency org="org.jsoup" name="jsoup" rev="1.8.1"/>
 			
-		<dependency org="cglib" name="cglib" rev="3.1"/>
+		<dependency org="cglib" name="cglib" rev="3.1">
+			<exclude org="org.ow2.asm" />
+		</dependency>
+		<dependency org="org.ow2.asm" name="asm" rev="5.0.3"/>
 		
 		<dependency org="junit" name="junit" rev="4.11" conf="nodeploy->default" />
 		
