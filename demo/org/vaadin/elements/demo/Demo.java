@@ -77,7 +77,7 @@ public class Demo extends UI {
 
         PaperSlider slider = PaperSlider.create();
         slider.setValue(50);
-        slider.addEventListener("change", arguments -> {
+        slider.addEventListener("core-change", arguments -> {
             Notification.show("Value changed to " + slider.getValue());
         });
 

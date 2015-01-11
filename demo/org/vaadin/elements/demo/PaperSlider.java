@@ -15,7 +15,7 @@ public interface PaperSlider extends Element {
 
     public double setValue(double value);
 
-    @UpdatedBy("change")
+    @UpdatedBy("core-change")
     public double getValue();
 
 }
