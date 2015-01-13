@@ -25,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("valo")
 public class Demo extends UI {
 
-    @WebServlet(value = "/*", asyncSupported = true)
+    @WebServlet(value = "/*", asyncSupported = true, loadOnStartup = 1)
     @VaadinServletConfiguration(productionMode = false, ui = Demo.class)
     public static class Servlet extends VaadinServlet {
         @Override

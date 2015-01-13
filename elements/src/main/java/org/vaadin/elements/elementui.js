@@ -6,6 +6,19 @@ window.org_vaadin_elements_ElementIntegration = function() {
 	var ids = {
 		"0" : this.getElement(this.getParentId())
 	};
+	
+	var pendingCallbacks = [];
+	
+	var deferFlushCallbackTimeout;
+	var deferFlushCallback = function () {
+		if (!deferFlushCallbackTimeout) {
+			deferFlushCallbackTimeout = window.setTimeout(function() {
+				deferFlushCallbackTimeout = null;
+				_self.callback(pendingCallbacks);
+				pendingCallbacks = [];
+			}, 0);
+		}
+	}
 
 	var handlers = {
 		createElement : function(id, tagName) {
@@ -44,7 +57,8 @@ window.org_vaadin_elements_ElementIntegration = function() {
 				params[i] = function() {
 					// Convert array-like object to proper array
 					var args = Array.prototype.slice.call(arguments, 0);
-					_self.callback(id, callbackId, args);
+					pendingCallbacks.push([id, callbackId, args]);
+					deferFlushCallback();
 				}
 			});
 

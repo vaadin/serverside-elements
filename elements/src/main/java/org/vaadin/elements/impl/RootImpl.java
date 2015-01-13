@@ -210,19 +210,24 @@ public class RootImpl extends ElementImpl implements Root {
     }
 
     public void handleCallback(JsonArray arguments) {
-        int elementId = (int) arguments.getNumber(0);
-        int cid = (int) arguments.getNumber(1);
-        JsonArray params = arguments.getArray(2);
+        JsonArray callbacks = arguments.getArray(0);
+        for (int i = 0; i < callbacks.length(); i++) {
+            JsonArray call = callbacks.getArray(i);
 
-        ElementImpl element = (ElementImpl) idToNode.get(Integer
-                .valueOf(elementId));
-        if (element == null) {
-            System.out.println(cid + " detached?");
-            return;
+            int elementId = (int) call.getNumber(0);
+            int cid = (int) call.getNumber(1);
+            JsonArray params = call.getArray(2);
+
+            ElementImpl element = (ElementImpl) idToNode.get(Integer
+                    .valueOf(elementId));
+            if (element == null) {
+                System.out.println(cid + " detached?");
+                return;
+            }
+
+            JavaScriptFunction callback = element.getCallback(cid);
+            callback.call(params);
         }
-
-        JavaScriptFunction callback = element.getCallback(cid);
-        callback.call(params);
     }
 
     @Override
