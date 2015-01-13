@@ -122,7 +122,7 @@ public class RootImpl extends ElementImpl implements Root {
             addCommand("createElement", child, Json.create(e.getTag()));
 
             e.getAttributeNames().forEach(name -> setAttributeChange(e, name));
-            e.flushEvals();
+            e.flushCommandQueues();
         } else if (child instanceof TextNodeImpl) {
             TextNode t = (TextNode) child;
 
@@ -210,6 +210,21 @@ public class RootImpl extends ElementImpl implements Root {
     }
 
     public void handleCallback(JsonArray arguments) {
+        JsonArray attributeChanges = arguments.getArray(1);
+        for (int i = 0; i < attributeChanges.length(); i++) {
+            JsonArray attributeChange = attributeChanges.getArray(i);
+            int id = (int) attributeChange.getNumber(0);
+            String attribute = attributeChange.getString(1);
+            JsonValue value = attributeChange.get(2);
+
+            NodeImpl target = idToNode.get(Integer.valueOf(id));
+            if (value.getType() == JsonType.NULL) {
+                target.node.removeAttr(attribute);
+            } else {
+                target.node.attr(attribute, value.asString());
+            }
+        }
+
         JsonArray callbacks = arguments.getArray(0);
         for (int i = 0; i < callbacks.length(); i++) {
             JsonArray call = callbacks.getArray(i);
@@ -389,6 +404,12 @@ public class RootImpl extends ElementImpl implements Root {
         fetchDomComponents.put(id, connectorsToInlcude);
 
         owner.markAsDirty();
+    }
+
+    void setAttributeBound(ElementImpl elementImpl, String attributeName,
+            String eventName) {
+        addCommand("bindAttribute", elementImpl, Json.create(attributeName),
+                Json.create(eventName));
     }
 
 }

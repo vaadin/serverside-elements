@@ -7,6 +7,9 @@ window.org_vaadin_elements_ElementIntegration = function() {
 		"0" : this.getElement(this.getParentId())
 	};
 	
+	var boundAttributes = {};
+	
+	var pendingAttributeChangeEvents = {};
 	var pendingCallbacks = [];
 	
 	var deferFlushCallbackTimeout;
@@ -14,8 +17,31 @@ window.org_vaadin_elements_ElementIntegration = function() {
 		if (!deferFlushCallbackTimeout) {
 			deferFlushCallbackTimeout = window.setTimeout(function() {
 				deferFlushCallbackTimeout = null;
-				_self.callback(pendingCallbacks);
+
+				var attributeChanges = [];
+				for (var id in pendingAttributeChangeEvents) {
+					if (!pendingAttributeChangeEvents.hasOwnProperty(id)) {
+						continue;
+					}
+					var elementEvents = pendingAttributeChangeEvents[id];
+
+					for (var event in elementEvents) {
+						if (!elementEvents.hasOwnProperty(event)) {
+							continue;
+						}
+
+						var attributesToUpdate = boundAttributes[id][event];
+						for (var i = 0; i < attributesToUpdate.length; i++) {
+							var attribute = attributesToUpdate[i];
+							attributeChange = [+id, attribute, ""+ids[id][attribute]];
+							attributeChanges.push(attributeChange);
+						}
+					}
+				}
+				
+				_self.callback(pendingCallbacks, attributeChanges);
 				pendingCallbacks = [];
+				pendingAttributeChangeEvents = {};
 			}, 0);
 		}
 	}
@@ -50,6 +76,32 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			link.setAttribute("rel", "import");
 			link.setAttribute("href", url);
 			document.body.appendChild(link);
+		},
+		bindAttribute: function(id, attribute, event) {
+			var elementBindings = boundAttributes[id];
+			if (elementBindings === undefined) {
+				elementBindings = {};
+				boundAttributes[id] = elementBindings;
+			}
+			
+			var eventBindings = elementBindings[event];
+			if (eventBindings === undefined) {
+				eventBindings = [];
+				elementBindings[event] = eventBindings;
+				
+				ids[id].addEventListener(event, function() {
+					var pendingEvents = pendingAttributeChangeEvents[id];
+					if (pendingEvents === undefined) {
+						pendingEvents = {};
+						pendingAttributeChangeEvents[id] = pendingEvents;
+					}
+					pendingEvents[event] = true;
+
+					deferFlushCallback();
+				});
+			}
+			
+			eventBindings.push(attribute);
 		},
 		eval : function(id, script, params, callbacks) {
 			callbacks.forEach(function(i) {

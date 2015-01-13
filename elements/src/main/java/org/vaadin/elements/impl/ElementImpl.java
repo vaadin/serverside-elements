@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.vaadin.elements.Element;
@@ -60,6 +61,9 @@ public class ElementImpl extends NodeImpl implements Element {
     private List<Object[]> evalParamQueue = new ArrayList<>();
 
     private Map<Integer, JavaScriptFunction> callbacks = new HashMap<>();
+
+    // Maps event name -> set of attributes
+    private Map<String, Set<String>> boundAttributeQueue = new HashMap<>();
 
     @Override
     public void setAttribute(String name, String value) {
@@ -132,18 +136,24 @@ public class ElementImpl extends NodeImpl implements Element {
         }
     }
 
-    void flushEvals() {
-        if (!evalQueue.isEmpty()) {
-            RootImpl document = getRoot();
-            assert document != null;
+    void flushCommandQueues() {
+        RootImpl document = getRoot();
+        assert document != null;
 
-            if (document != null) {
-                for (int i = 0; i < evalQueue.size(); i++) {
-                    eval(evalQueue.get(i), evalParamQueue.get(i));
-                }
-                evalQueue.clear();
-                evalParamQueue.clear();
+        if (!evalQueue.isEmpty()) {
+            for (int i = 0; i < evalQueue.size(); i++) {
+                eval(evalQueue.get(i), evalParamQueue.get(i));
             }
+            evalQueue.clear();
+            evalParamQueue.clear();
+        }
+
+        if (!boundAttributeQueue.isEmpty()) {
+            boundAttributeQueue.forEach((event, attributes) -> {
+                attributes.forEach(attribute -> document.setAttributeBound(
+                        this, attribute, event));
+            });
+            boundAttributeQueue.clear();
         }
     }
 
@@ -157,9 +167,17 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public void bindAttribute(String attributeName, String eventName) {
-        addEventListener(eventName, arguments -> {
-            getElement().attr(attributeName, arguments.getString(0));
-        }, "''+e." + attributeName);
+        RootImpl document = getRoot();
+        if (document != null) {
+            document.setAttributeBound(this, attributeName, eventName);
+        } else {
+            Set<String> attributes = boundAttributeQueue.get(eventName);
+            if (attributes == null) {
+                attributes = new HashSet<String>();
+                boundAttributeQueue.put(eventName, attributes);
+            }
+            attributes.add(attributeName);
+        }
     }
 
     @Override
