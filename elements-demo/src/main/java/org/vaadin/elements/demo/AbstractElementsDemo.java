@@ -12,6 +12,7 @@ public abstract class AbstractElementsDemo extends CustomComponent {
     public AbstractElementsDemo() {
         setSizeFull();
         layout.setSizeFull();
+        layout.setSpacing(true);
         setCompositionRoot(layout);
     }
 
