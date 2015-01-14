@@ -14,6 +14,8 @@ public interface Element extends Node {
 
     public void appendChild(Node child);
 
+    public void appendHtml(String html);
+
     public void setAttribute(String name, String value);
 
     public void setAttribute(String name, boolean value);

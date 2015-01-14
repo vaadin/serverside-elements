@@ -43,6 +43,21 @@ public class ElementImpl extends NodeImpl implements Element {
         context.adoptAll(nodeImpl);
     }
 
+    @Override
+    public void appendHtml(String html) {
+        org.jsoup.nodes.Element element = getElement();
+        int oldChildCount = element.childNodeSize();
+        element.append(html);
+        int newChildCount = element.childNodeSize();
+
+        for (int i = oldChildCount; i < newChildCount; i++) {
+            org.jsoup.nodes.Element soupChild = element.child(i);
+            NodeImpl node = ElementReflectHelper.wrap(soupChild);
+            context.adopt(node);
+            context.wrapChildren(node);
+        }
+    }
+
     void appendSoupNode(NodeImpl child) {
         getElement().appendChild(child.node);
     }
