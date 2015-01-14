@@ -48,7 +48,9 @@ public class PaperElementsDemo extends AbstractElementsDemo {
         });
 
         Layout vertical = Layout.vertical();
+        vertical.appendHtml("<h2>Slider</h2>");
         vertical.appendChild(slider);
+        vertical.appendHtml("<h2>Buttons</h2>");
         vertical.appendChild(horizontal);
 
         CssLayout wrapper = new CssLayout();
