@@ -41,9 +41,12 @@ public class Demo extends UI {
     @Override
     protected void init(VaadinRequest request) {
         TabSheet tabSheet = new TabSheet();
+        tabSheet.setSizeFull();
         tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
+        tabSheet.addTab(new PaperElementsDemo(), "Paper compoments");
 
         VerticalLayout layout = new VerticalLayout(tabSheet);
+        layout.setSizeFull();
         layout.setMargin(true);
         setContent(layout);
         // Root root = ElementIntegration.getRoot(this);
@@ -53,46 +56,6 @@ public class Demo extends UI {
         // demoExistingElements(root);
 
         // demoPaperComponents(root);
-    }
-
-    private void demoPaperComponents(Root root) {
-        PaperButton basicButton = PaperButton.create("Basic button");
-        basicButton.setRaised(true);
-        basicButton.addEventListener("click", args -> {
-            Notification.show("Clicked");
-        });
-
-        PaperButton notRaisedButton = PaperButton.create("Not raised");
-        notRaisedButton.setRaised(false);
-
-        PaperButton noInkButton = PaperButton.create("No ink");
-        noInkButton.setRaised(true);
-        noInkButton.setNoink(true);
-
-        PaperButton disabledButton = PaperButton.create("Disabled");
-        disabledButton.setDisabled(true);
-
-        Layout horizontal = Layout.horizontal();
-        horizontal.setJustified(true);
-        horizontal.setAttribute("style", "width: 600px");
-
-        horizontal.appendChild(basicButton);
-        horizontal.appendChild(notRaisedButton);
-        horizontal.appendChild(noInkButton);
-        horizontal.appendChild(disabledButton);
-
-        PaperSlider slider = PaperSlider.create();
-        slider.setValue(50);
-        slider.addEventListener("change", arguments -> {
-            Notification.show("Value changed to " + slider.getValue());
-        });
-
-        Layout vertical = Layout.vertical();
-        vertical.appendChild(slider);
-        vertical.appendChild(horizontal);
-
-        root.appendChild(vertical);
-
     }
 
     private void demoExistingElements(Root root) {

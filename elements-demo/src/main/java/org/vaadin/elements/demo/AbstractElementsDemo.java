@@ -10,6 +10,8 @@ public abstract class AbstractElementsDemo extends CustomComponent {
     private final VerticalLayout layout = new VerticalLayout();
 
     public AbstractElementsDemo() {
+        setSizeFull();
+        layout.setSizeFull();
         setCompositionRoot(layout);
     }
 
@@ -17,7 +19,9 @@ public abstract class AbstractElementsDemo extends CustomComponent {
     public void attach() {
         super.attach();
         if (layout.getComponentCount() == 0) {
-            layout.addComponents(new Label(getDemoDescription()), getDemoView());
+            Component demoView = getDemoView();
+            layout.addComponents(new Label(getDemoDescription()), demoView);
+            layout.setExpandRatio(demoView, 1);
         }
     }
 
