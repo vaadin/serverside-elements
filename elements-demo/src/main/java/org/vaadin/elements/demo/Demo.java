@@ -43,6 +43,8 @@ public class Demo extends UI {
         TabSheet tabSheet = new TabSheet();
         tabSheet.setSizeFull();
         tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
+        // Does not work in Firefox
+        // tabSheet.addTab(new GoogleMapDemo(), "Web components");
         tabSheet.addTab(new PaperElementsDemo(), "Paper compoments");
 
         VerticalLayout layout = new VerticalLayout(tabSheet);
