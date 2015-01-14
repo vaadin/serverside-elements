@@ -41,10 +41,11 @@ public class Demo extends UI {
     @Override
     protected void init(VaadinRequest request) {
         TabSheet tabSheet = new TabSheet();
-        setContent(tabSheet);
-
         tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
 
+        VerticalLayout layout = new VerticalLayout(tabSheet);
+        layout.setMargin(true);
+        setContent(layout);
         // Root root = ElementIntegration.getRoot(this);
 
         // demoNewElements(root);
