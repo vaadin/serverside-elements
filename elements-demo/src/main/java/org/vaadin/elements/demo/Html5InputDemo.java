@@ -9,6 +9,7 @@ import org.vaadin.elements.Root;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
@@ -51,7 +52,9 @@ public class Html5InputDemo extends AbstractElementsDemo {
 
         Root root = ElementIntegration.getRoot(playground);
         root.appendChild(input);
-        return new VerticalLayout(typeSelector, playground);
+        HorizontalLayout layout = new HorizontalLayout(typeSelector, playground);
+        layout.setSpacing(true);
+        return layout;
     }
 
 }

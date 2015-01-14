@@ -10,6 +10,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
 @Theme("valo")
@@ -31,6 +32,7 @@ public class Demo extends UI {
     @Override
     protected void init(VaadinRequest request) {
         TabSheet tabSheet = new TabSheet();
+        tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabSheet.setSizeFull();
         tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
         // Does not work in Firefox
