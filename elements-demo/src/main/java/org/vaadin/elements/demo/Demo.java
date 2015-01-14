@@ -45,6 +45,7 @@ public class Demo extends UI {
         tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
         // Does not work in Firefox
         // tabSheet.addTab(new GoogleMapDemo(), "Web components");
+        tabSheet.addTab(new ExistingElementsDemo(), "Existing elements");
         tabSheet.addTab(new PaperElementsDemo(), "Paper compoments");
 
         VerticalLayout layout = new VerticalLayout(tabSheet);
