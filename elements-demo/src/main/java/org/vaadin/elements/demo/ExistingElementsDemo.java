@@ -23,8 +23,13 @@ public class ExistingElementsDemo extends AbstractElementsDemo {
 
         button.addClickListener(e -> {
             Optional<Element> span = root.querySelector("span.v-button-wrap");
-            span.ifPresent(element -> element.setAttribute("style",
-                    "color: red"));
+            span.ifPresent(element -> {
+                if (element.hasAttribute("style")) {
+                    element.removeAttribute("style");
+                } else {
+                    element.setAttribute("style", "color: red");
+                }
+            });
         });
 
         // Fetch dom so that it's available when clicking the button

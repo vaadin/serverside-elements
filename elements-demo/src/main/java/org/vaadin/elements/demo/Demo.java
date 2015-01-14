@@ -7,7 +7,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.TabSheet;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -31,18 +32,32 @@ public class Demo extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        TabSheet tabSheet = new TabSheet();
-        tabSheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
-        tabSheet.setSizeFull();
-        tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
+        VerticalLayout layout = new VerticalLayout();
+        addDemo(layout, new Html5InputDemo(), "HTML5 inputs");
         // Does not work in Firefox
         // tabSheet.addTab(new GoogleMapDemo(), "Web components");
-        tabSheet.addTab(new ExistingElementsDemo(), "Existing elements");
-        tabSheet.addTab(new PaperElementsDemo(), "Paper compoments");
+        addDemo(layout, new ExistingElementsDemo(), "Existing elements");
+        addDemo(layout, new PaperElementsDemo(), "Paper compoments");
 
-        VerticalLayout layout = new VerticalLayout(tabSheet);
-        layout.setSizeFull();
         layout.setMargin(true);
+        // layout.setSpacing(true);
         setContent(layout);
+    }
+
+    private void addDemo(VerticalLayout layout, AbstractElementsDemo demo,
+            String caption) {
+        Label label = new Label(caption);
+        label.addStyleName(ValoTheme.LABEL_H1);
+        // label.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        layout.addComponent(label);
+
+        VerticalLayout wrapper = new VerticalLayout();
+        wrapper.setMargin(new MarginInfo(false, false, false, true));
+        wrapper.setSpacing(true);
+        Label descriptionLabel = new Label(demo.getDemoDescription());
+        descriptionLabel.setWidth("600px");
+        wrapper.addComponent(descriptionLabel);
+        wrapper.addComponent(demo.getDemoView());
+        layout.addComponent(wrapper);
     }
 }
