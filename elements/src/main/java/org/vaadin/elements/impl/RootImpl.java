@@ -202,7 +202,7 @@ public class RootImpl extends ElementImpl implements Root {
             }
 
             EncodeResult encodeResult = JsonCodec.encode(value, null, type,
-                    owner.getUI().getConnectorTracker());
+                    null);
             params.set(i, encodeResult.getEncodedValue());
         }
 
