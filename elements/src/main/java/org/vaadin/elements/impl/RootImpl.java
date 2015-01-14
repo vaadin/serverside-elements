@@ -141,10 +141,15 @@ public class RootImpl extends ElementImpl implements Root {
         Arrays.stream(type.getInterfaces())
                 .map(i -> i.getAnnotation(Import.class))
                 .filter(Objects::nonNull).map(Import::value)
-                .filter(url -> !handledImports.contains(url)).forEach(url -> {
-                    handledImports.add(url);
-                    addCommand("import", null, Json.create(url));
-                });
+                .forEach(this::importHtml);
+    }
+
+    @Override
+    public void importHtml(String url) {
+        if (!handledImports.contains(url)) {
+            handledImports.add(url);
+            addCommand("import", null, Json.create(url));
+        }
     }
 
     void setAttributeChange(ElementImpl element, String name) {
