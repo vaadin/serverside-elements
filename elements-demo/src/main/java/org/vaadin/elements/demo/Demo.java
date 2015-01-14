@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.elements.Element;
-import org.vaadin.elements.ElementIntegration;
 import org.vaadin.elements.Elements;
 import org.vaadin.elements.Root;
 import org.vaadin.elements.TextNode;
@@ -18,6 +17,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -31,7 +31,7 @@ public class Demo extends UI {
         @Override
         protected void servletInitialized() throws ServletException {
             super.servletInitialized();
-            // XXX Workaround until #9045 has been merged
+            // XXX Workaround until we can use beta2
             getService().addSessionInitListener(
                     e -> e.getSession().addBootstrapListener(
                             new BootstrapListenerImplementation()));
@@ -40,13 +40,18 @@ public class Demo extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        Root root = ElementIntegration.getRoot(this);
+        TabSheet tabSheet = new TabSheet();
+        setContent(tabSheet);
+
+        tabSheet.addTab(new Html5InputDemo(), "HTML5 inputs");
+
+        // Root root = ElementIntegration.getRoot(this);
 
         // demoNewElements(root);
 
         // demoExistingElements(root);
 
-        demoPaperComponents(root);
+        // demoPaperComponents(root);
     }
 
     private void demoPaperComponents(Root root) {
