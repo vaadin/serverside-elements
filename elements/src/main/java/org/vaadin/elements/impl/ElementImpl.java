@@ -199,9 +199,8 @@ public class ElementImpl extends NodeImpl implements Element {
     public void addEventListener(String eventName, JavaScriptFunction listener,
             String... arguments) {
         String argumentBuilder = String.join(",", arguments);
-        eval("e.addEventListener('" + eventName
-                + "', function (event) { param[0](" + argumentBuilder + ") })",
-                listener);
+        eval("e.addEventListener('" + eventName + "', function (event) { $0("
+                + argumentBuilder + ") })", listener);
     }
 
     @Override

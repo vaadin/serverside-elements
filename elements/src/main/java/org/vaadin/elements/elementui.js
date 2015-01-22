@@ -104,17 +104,28 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			eventBindings.push(attribute);
 		},
 		eval : function(id, script, params, callbacks) {
-			callbacks.forEach(function(i) {
-				var callbackId = params[i];
-				params[i] = function() {
+			var newFunctionParams = ["e"];
+			var functionParams = [ids[id]];
+			
+			for(var i = 0; i < callbacks.length; i++) {
+				var paramId = callbacks[i];
+				var callbackId = params[paramId];
+				params[paramId] = function() {
 					// Convert array-like object to proper array
 					var args = Array.prototype.slice.call(arguments, 0);
 					pendingCallbacks.push([id, callbackId, args]);
 					deferFlushCallback();
 				}
-			});
-
-			(new Function("e", "param", script))(ids[id], params);
+			}
+			
+			for(var i = 0; i < params.length; i++) {
+				newFunctionParams.push("$" + i);
+				functionParams.push(params[i]);
+			}
+			
+			newFunctionParams.push(script);
+			
+			Function.apply(Function, newFunctionParams).apply(null, functionParams);
 		},
 		fetchDom : function(id, includePids) {
 			var root = ids["0"];
@@ -164,7 +175,7 @@ window.org_vaadin_elements_ElementIntegration = function() {
 	}
 
 	this.run = function(commands) {
-		console.log(commands);
+//		console.log(commands);
 		commands.forEach(function(command) {
 			var name = command[0];
 			var params = command.slice(1);
