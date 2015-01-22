@@ -12,7 +12,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.VerticalLayout;
 
 public class Html5InputDemo extends AbstractElementsDemo {
 
@@ -48,7 +47,7 @@ public class Html5InputDemo extends AbstractElementsDemo {
 
             playground.setCaption("input type=" + type);
         });
-        typeSelector.setValue("text");
+        typeSelector.setValue("range");
 
         Root root = ElementIntegration.getRoot(playground);
         root.appendChild(input);
