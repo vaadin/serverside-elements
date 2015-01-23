@@ -3,6 +3,7 @@ package org.vaadin.elements.demo;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
@@ -15,19 +16,12 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
 @Theme("valo")
+@JavaScript("vaadin://bower_components/webcomponentsjs/webcomponents.js")
 public class Demo extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true, loadOnStartup = 1)
     @VaadinServletConfiguration(productionMode = false, ui = Demo.class)
     public static class Servlet extends VaadinServlet {
-        @Override
-        protected void servletInitialized() throws ServletException {
-            super.servletInitialized();
-            // XXX Workaround until we can use beta2
-            getService().addSessionInitListener(
-                    e -> e.getSession().addBootstrapListener(
-                            new BootstrapListenerImplementation()));
-        }
     }
 
     @Override
