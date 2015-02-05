@@ -13,7 +13,7 @@ public interface PaperSlider extends Element {
         return Elements.create(PaperSlider.class);
     }
 
-    public double setValue(double value);
+    public void setValue(double value);
 
     @UpdatedBy("core-change")
     public double getValue();
