@@ -6,6 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.jsoup.nodes.Node;
 
@@ -32,12 +33,12 @@ public class Context {
     public void wrapChildren(NodeImpl node) {
         assert node.context == this;
 
-        List<Node> childNodes = new ArrayList<>(node.node.childNodes());
+        Queue<Node> queue = new LinkedList<>(node.node.childNodes());
 
-        while (!childNodes.isEmpty()) {
-            Node soupChild = childNodes.remove(childNodes.size() - 1);
+        while (!queue.isEmpty()) {
+            Node soupChild = queue.poll();
 
-            childNodes.addAll(soupChild.childNodes());
+            queue.addAll(soupChild.childNodes());
 
             NodeImpl child = ElementReflectHelper.wrap(soupChild);
             adopt(child);

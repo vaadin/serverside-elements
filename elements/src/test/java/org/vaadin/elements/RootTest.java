@@ -60,4 +60,14 @@ public class RootTest {
         Assert.assertEquals("[[\"remove\",2]]", pendingCommands.toJson());
     }
 
+    @Test
+    public void innerHtmlElementOrder() {
+        root.setInnerHtml("<div></div><span></span>");
+        JsonArray pendingCommands = root.flushPendingCommands();
+
+        Assert.assertEquals(
+                "[[\"createElement\",2,\"div\"],[\"appendChild\",0,2],[\"createElement\",4,\"span\"],[\"appendChild\",0,4]]",
+                pendingCommands.toJson());
+    }
+
 }
