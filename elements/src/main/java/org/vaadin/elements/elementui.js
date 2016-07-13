@@ -68,7 +68,9 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			ids[parentId].appendChild(ids[childId]);
 		},
 		remove : function(id) {
-			ids[id].remove();
+			if (ids[id].parentNode) {
+				ids[id].parentNode.removeChild(ids[id]);
+			}
 			delete ids[id];
 		},
 		import: function(url) {
