@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +24,6 @@ import org.vaadin.elements.Elements;
 import org.vaadin.elements.EventParam;
 import org.vaadin.elements.Node;
 
-import com.google.gwt.thirdparty.guava.common.base.Objects;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.ui.JavaScriptFunction;
@@ -83,7 +83,7 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public void setAttribute(String name, String value) {
         org.jsoup.nodes.Element element = getElement();
-        if (Objects.equal(value, getAttribute(name))) {
+        if (Objects.equals(value, getAttribute(name))) {
             return;
         }
 
@@ -165,8 +165,8 @@ public class ElementImpl extends NodeImpl implements Element {
 
         if (!boundAttributeQueue.isEmpty()) {
             boundAttributeQueue.forEach((event, attributes) -> {
-                attributes.forEach(attribute -> document.setAttributeBound(
-                        this, attribute, event));
+                attributes.forEach(attribute -> document.setAttributeBound(this,
+                        attribute, event));
             });
             boundAttributeQueue.clear();
         }
@@ -205,7 +205,8 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public void addEventListener(EventListener listener) {
-        List<Method> listenerMethods = findInterfaceMethods(listener.getClass());
+        List<Method> listenerMethods = findInterfaceMethods(
+                listener.getClass());
 
         for (Method method : listenerMethods) {
             if (method.getDeclaringClass() == Object.class) {
@@ -240,8 +241,8 @@ public class ElementImpl extends NodeImpl implements Element {
                     throw new RuntimeException(getter.toString());
                 }
 
-                String paramName = ElementReflectHelper.getPropertyName(getter
-                        .getName());
+                String paramName = ElementReflectHelper
+                        .getPropertyName(getter.getName());
 
                 methodOrder.put(getter.getName(), Integer.valueOf(i));
                 argumentBuilders[i] = "event." + paramName;
