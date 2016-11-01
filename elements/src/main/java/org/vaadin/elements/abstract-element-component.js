@@ -1,0 +1,1 @@
+window.org_vaadin_elements_AbstractElementComponent = function() { }
