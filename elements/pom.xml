@@ -5,7 +5,7 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>elements</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.4</version>
+	<version>0.1.5-SNAPSHOT</version>
 	<name>Elements Add-on</name>
 
 	<properties>
