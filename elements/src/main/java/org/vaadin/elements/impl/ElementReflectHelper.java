@@ -59,7 +59,7 @@ public class ElementReflectHelper {
                 String name = method.getName();
 
                 if (isGetter(method)) {
-                    name = ElementReflectHelper.getPropertyName(name);
+                    name = ElementReflectHelper.getAttributeName(name);
 
                     Class<?> type = method.getReturnType();
                     if (type == String.class) {
@@ -76,7 +76,7 @@ public class ElementReflectHelper {
                     }
                 } else if (name.startsWith("set")
                         && method.getParameterCount() == 1) {
-                    name = ElementReflectHelper.getPropertyName(name);
+                    name = ElementReflectHelper.getAttributeName(name);
                     Class<?> type = method.getParameterTypes()[0];
 
                     if (type == String.class) {
@@ -120,6 +120,7 @@ public class ElementReflectHelper {
             if (isGetter(method)) {
                 for (UpdatedBy updatedBy : method
                         .getAnnotationsByType(UpdatedBy.class)) {
+                    // Binding actually happens on the property level in the DOM
                     instance.bindAttribute(getPropertyName(method.getName()),
                             updatedBy.value());
                 }
@@ -140,6 +141,13 @@ public class ElementReflectHelper {
         // TODO locale for lower case
         name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
         return name;
+    }
+
+    private static String getAttributeName(String methodName) {
+        String propertyName = getPropertyName(methodName);
+
+        // Convert camelCase to dash-case
+        return propertyName.replaceAll("([A-Z])", "-$1").toLowerCase();
     }
 
 }
