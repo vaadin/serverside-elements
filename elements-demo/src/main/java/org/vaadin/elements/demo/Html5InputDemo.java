@@ -15,10 +15,11 @@ import com.vaadin.ui.Notification;
 
 public class Html5InputDemo extends AbstractElementsDemo {
 
-    private final NativeSelect typeSelector = new NativeSelect(
-            "Select input type", Arrays.asList("text", "search", "email",
-                    "url", "tel", "number", "range", "date", "month", "week",
-                    "time", "datetime", "datetime-local", "color"));
+    private final NativeSelect<String> typeSelector = new NativeSelect<>(
+            "Select input type",
+            Arrays.asList("text", "search", "email", "url", "tel", "number",
+                    "range", "date", "month", "week", "time", "datetime",
+                    "datetime-local", "color"));
     private final Element input = Elements.create("input");
     private final CssLayout playground = new CssLayout();
 
@@ -31,14 +32,12 @@ public class Html5InputDemo extends AbstractElementsDemo {
     @Override
     protected Component getDemoView() {
         input.bindAttribute("value", "change");
-        input.addEventListener(
-                "change",
-                arguments -> {
-                    Notification.show("Value changed to "
-                            + input.getAttribute("value"));
-                });
+        input.addEventListener("change", arguments -> {
+            Notification
+                    .show("Value changed to " + input.getAttribute("value"));
+        });
 
-        typeSelector.setNullSelectionAllowed(false);
+        typeSelector.setEmptySelectionAllowed(false);
         typeSelector.addValueChangeListener(event -> {
             String type = String.valueOf(typeSelector.getValue());
 
@@ -51,7 +50,8 @@ public class Html5InputDemo extends AbstractElementsDemo {
 
         Root root = ElementIntegration.getRoot(playground);
         root.appendChild(input);
-        HorizontalLayout layout = new HorizontalLayout(typeSelector, playground);
+        HorizontalLayout layout = new HorizontalLayout(typeSelector,
+                playground);
         layout.setSpacing(true);
         return layout;
     }

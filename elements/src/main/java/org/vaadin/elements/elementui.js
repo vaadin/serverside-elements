@@ -73,12 +73,6 @@ window.org_vaadin_elements_ElementIntegration = function() {
 			}
 			delete ids[id];
 		},
-		import: function(url) {
-			var link = document.createElement("link");
-			link.setAttribute("rel", "import");
-			link.setAttribute("href", url);
-			document.body.appendChild(link);
-		},
 		bindAttribute: function(id, attribute, event) {
 			var elementBindings = boundAttributes[id];
 			if (elementBindings === undefined) {

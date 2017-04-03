@@ -3,10 +3,13 @@ package org.vaadin.elements.demo;
 import org.vaadin.elements.ElementIntegration;
 import org.vaadin.elements.Root;
 
+import com.vaadin.annotations.HtmlImport;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 
+@HtmlImport("vaadin://bower_components/paper-button/paper-button.html")
+@HtmlImport("vaadin://bower_components/paper-slider/paper-slider.html")
 public class PaperElementsDemo extends AbstractElementsDemo {
 
     @Override

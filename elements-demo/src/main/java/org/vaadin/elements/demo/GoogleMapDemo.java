@@ -5,12 +5,14 @@ import org.vaadin.elements.ElementIntegration;
 import org.vaadin.elements.Elements;
 import org.vaadin.elements.Root;
 
+import com.vaadin.annotations.HtmlImport;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
+@HtmlImport("vaadin://bower_components/google-map/google-map.html")
 public class GoogleMapDemo extends AbstractElementsDemo {
 
     @Override
@@ -23,8 +25,6 @@ public class GoogleMapDemo extends AbstractElementsDemo {
         CssLayout wrapper = new CssLayout();
         Root root = ElementIntegration.getRoot(wrapper);
 
-        root.importHtml("VAADIN/bower_components/google-map/google-map.html");
-
         final Element googleMap = Elements.create("google-map");
 
         googleMap.setAttribute("style",
@@ -35,14 +35,14 @@ public class GoogleMapDemo extends AbstractElementsDemo {
 
         root.appendChild(googleMap);
 
-        HorizontalLayout buttons = new HorizontalLayout(new Button(
-                "GWT.create US", event -> {
+        HorizontalLayout buttons = new HorizontalLayout(
+                new Button("GWT.create US", event -> {
                     googleMap.setAttribute("latitude", "37.414274");
                     googleMap.setAttribute("longitude", "-122.077409");
                 }), new Button("GWT.create EU", event -> {
-            googleMap.setAttribute("latitude", "48.152663");
-            googleMap.setAttribute("longitude", "11.598418");
-        }));
+                    googleMap.setAttribute("latitude", "48.152663");
+                    googleMap.setAttribute("longitude", "11.598418");
+                }));
         buttons.setSpacing(true);
 
         VerticalLayout layout = new VerticalLayout(buttons, wrapper);

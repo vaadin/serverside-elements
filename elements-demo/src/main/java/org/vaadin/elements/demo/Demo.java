@@ -1,6 +1,5 @@
 package org.vaadin.elements.demo;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.JavaScript;
@@ -8,7 +7,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -45,13 +43,6 @@ public class Demo extends UI {
         // label.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         layout.addComponent(label);
 
-        VerticalLayout wrapper = new VerticalLayout();
-        wrapper.setMargin(new MarginInfo(false, false, false, true));
-        wrapper.setSpacing(true);
-        Label descriptionLabel = new Label(demo.getDemoDescription());
-        descriptionLabel.setWidth("600px");
-        wrapper.addComponent(descriptionLabel);
-        wrapper.addComponent(demo.getDemoView());
-        layout.addComponent(wrapper);
+        layout.addComponent(demo);
     }
 }
