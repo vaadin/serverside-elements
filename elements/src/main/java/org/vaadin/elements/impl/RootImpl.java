@@ -7,15 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.vaadin.elements.ElementIntegration;
 import org.vaadin.elements.Elements;
-import org.vaadin.elements.Import;
 import org.vaadin.elements.Node;
 import org.vaadin.elements.Root;
 import org.vaadin.elements.TextNode;
@@ -45,8 +42,6 @@ public class RootImpl extends ElementImpl implements Root {
 
     private final Map<Integer, Runnable> fetchDomCallbacks = new HashMap<>();
     private final Map<Integer, Component[]> fetchDomComponents = new HashMap<>();
-
-    private final Set<String> handledImports = new HashSet<>();
 
     public RootImpl(ElementIntegration owner) {
         super(new org.jsoup.nodes.Element(org.jsoup.parser.Tag.valueOf("div"),
@@ -113,8 +108,6 @@ public class RootImpl extends ElementImpl implements Root {
         nodeToId.put(child, id);
         idToNode.put(id, child);
 
-        resolveImports(child.getClass());
-
         // Enqueue initialization operations
         if (child instanceof ElementImpl) {
             ElementImpl e = (ElementImpl) child;
@@ -128,28 +121,13 @@ public class RootImpl extends ElementImpl implements Root {
 
             addCommand("createText", child, Json.create(t.getText()));
         } else {
-            throw new RuntimeException("Unsupported node type: "
-                    + child.getClass());
+            throw new RuntimeException(
+                    "Unsupported node type: " + child.getClass());
         }
 
         // Finally add append command
         addCommand("appendChild", child.getParent(),
                 Json.create(id.doubleValue()));
-    }
-
-    private void resolveImports(Class<? extends NodeImpl> type) {
-        Arrays.stream(type.getInterfaces())
-                .map(i -> i.getAnnotation(Import.class))
-                .filter(Objects::nonNull).map(Import::value)
-                .forEach(this::importHtml);
-    }
-
-    @Override
-    public void importHtml(String url) {
-        if (!handledImports.contains(url)) {
-            handledImports.add(url);
-            addCommand("import", null, Json.create(url));
-        }
     }
 
     void setAttributeChange(ElementImpl element, String name) {
@@ -167,15 +145,16 @@ public class RootImpl extends ElementImpl implements Root {
     }
 
     public JsonArray flushPendingCommands() {
-        for (Entry<Integer, Component[]> entry : fetchDomComponents.entrySet()) {
+        for (Entry<Integer, Component[]> entry : fetchDomComponents
+                .entrySet()) {
             JsonArray connectorsJson = Json.createArray();
             for (Component component : entry.getValue()) {
                 connectorsJson.set(connectorsJson.length(),
                         component.getConnectorId());
             }
 
-            addCommand("fetchDom", null,
-                    Json.create(entry.getKey().intValue()), connectorsJson);
+            addCommand("fetchDom", null, Json.create(entry.getKey().intValue()),
+                    connectorsJson);
         }
         fetchDomComponents.clear();
 
@@ -238,8 +217,8 @@ public class RootImpl extends ElementImpl implements Root {
             int cid = (int) call.getNumber(1);
             JsonArray params = call.getArray(2);
 
-            ElementImpl element = (ElementImpl) idToNode.get(Integer
-                    .valueOf(elementId));
+            ElementImpl element = (ElementImpl) idToNode
+                    .get(Integer.valueOf(elementId));
             if (element == null) {
                 System.out.println(cid + " detached?");
                 return;
@@ -303,7 +282,7 @@ public class RootImpl extends ElementImpl implements Root {
 
         while (rootNode.childNodeSize() != 0) {
             org.jsoup.nodes.Node child = rootNode.childNode(0);
-            ((org.jsoup.nodes.Element) this.node).appendChild(child);
+            ((org.jsoup.nodes.Element) node).appendChild(child);
         }
 
         context.wrapChildren(this);
@@ -320,7 +299,8 @@ public class RootImpl extends ElementImpl implements Root {
         fetchDomCallbacks.clear();
     }
 
-    private void synchronizeRecursively(JsonArray hierarchy, ElementImpl element) {
+    private void synchronizeRecursively(JsonArray hierarchy,
+            ElementImpl element) {
         int firstChild;
         JsonValue maybeAttributes = hierarchy.get(2);
         if (maybeAttributes.getType() == JsonType.OBJECT) {
@@ -333,9 +313,8 @@ public class RootImpl extends ElementImpl implements Root {
             oldAttributes.removeAll(Arrays.asList(names));
             oldAttributes.forEach(n -> element.removeAttribute(n));
 
-            Arrays.stream(names).forEach(
-                    name -> element.setAttribute(name,
-                            attributes.getString(name)));
+            Arrays.stream(names).forEach(name -> element.setAttribute(name,
+                    attributes.getString(name)));
         } else {
             firstChild = 2;
         }
@@ -354,8 +333,8 @@ public class RootImpl extends ElementImpl implements Root {
 
                 if (nodeId % 2 == 0) {
                     // old node
-                    textNode = (TextNodeImpl) idToNode.get(Integer
-                            .valueOf(nodeId));
+                    textNode = (TextNodeImpl) idToNode
+                            .get(Integer.valueOf(nodeId));
                     textNode.setText(text);
                 } else {
                     // new node
@@ -372,8 +351,8 @@ public class RootImpl extends ElementImpl implements Root {
 
                 if (nodeId % 2 == 0) {
                     // old node
-                    childElement = (ElementImpl) idToNode.get(Integer
-                            .valueOf(nodeId));
+                    childElement = (ElementImpl) idToNode
+                            .get(Integer.valueOf(nodeId));
                     assert childElement.getTag().equals(tag);
                 } else {
                     // new node
@@ -385,8 +364,8 @@ public class RootImpl extends ElementImpl implements Root {
                 childNode = childElement;
                 break;
             default:
-                throw new RuntimeException("Unsupported child JSON: "
-                        + child.toJson());
+                throw new RuntimeException(
+                        "Unsupported child JSON: " + child.toJson());
             }
 
             if (nodeId % 2 == 1) {

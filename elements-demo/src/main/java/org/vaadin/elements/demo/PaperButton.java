@@ -2,11 +2,9 @@ package org.vaadin.elements.demo;
 
 import org.vaadin.elements.Element;
 import org.vaadin.elements.Elements;
-import org.vaadin.elements.Import;
 import org.vaadin.elements.Tag;
 
 @Tag("paper-button")
-@Import("VAADIN/bower_components/paper-button/paper-button.html")
 public interface PaperButton extends Element {
     public static PaperButton create() {
         return Elements.create(PaperButton.class);

@@ -6,6 +6,4 @@ public interface Root extends Element {
 
     void fetchDom(Runnable runnable, Component... connectorsToInlcude);
 
-    public abstract void importHtml(String url);
-
 }
