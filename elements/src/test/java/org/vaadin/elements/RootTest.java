@@ -86,6 +86,7 @@ public class RootTest {
 
     @Test
     public void addLeafToRootNode() {
-        root.setInnerHtml("<span>Text-Leaf</span>");
+         // Only relevant for newer JSoup versions
+         root.setInnerHtml("<span>Text-Leaf</span>");
     }
 }
