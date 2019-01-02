@@ -37,8 +37,10 @@ public class Context {
 
         while (!queue.isEmpty()) {
             Node soupChild = queue.poll();
-
-            queue.addAll(soupChild.childNodes());
+             // Only relevant for newer JSoup versions
+             if (soupChild.childNodeSize() > 0) {
+            	queue.addAll(soupChild.childNodes());
+            }
 
             NodeImpl child = ElementReflectHelper.wrap(soupChild);
             adopt(child);

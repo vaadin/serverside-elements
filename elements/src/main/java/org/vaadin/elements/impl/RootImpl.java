@@ -302,23 +302,27 @@ public class RootImpl extends ElementImpl implements Root {
     private void synchronizeRecursively(JsonArray hierarchy,
             ElementImpl element) {
         int firstChild;
-        JsonValue maybeAttributes = hierarchy.get(2);
-        if (maybeAttributes.getType() == JsonType.OBJECT) {
-            firstChild = 3;
-            JsonObject attributes = (JsonObject) maybeAttributes;
-            String[] names = attributes.keys();
-
-            HashSet<String> oldAttributes = new HashSet<>(
-                    element.getAttributeNames());
-            oldAttributes.removeAll(Arrays.asList(names));
-            oldAttributes.forEach(n -> element.removeAttribute(n));
-
-            Arrays.stream(names).forEach(name -> element.setAttribute(name,
-                    attributes.getString(name)));
-        } else {
-            firstChild = 2;
+        if (hierarchy.length() > 2) {
+	        JsonValue maybeAttributes = hierarchy.get(2);
+	        if (maybeAttributes.getType() == JsonType.OBJECT) {
+	            firstChild = 3;
+	            JsonObject attributes = (JsonObject) maybeAttributes;
+	            String[] names = attributes.keys();
+	
+	            HashSet<String> oldAttributes = new HashSet<>(
+	                    element.getAttributeNames());
+	            oldAttributes.removeAll(Arrays.asList(names));
+	            oldAttributes.forEach(n -> element.removeAttribute(n));
+	
+	            Arrays.stream(names).forEach(name -> element.setAttribute(name,
+	                    attributes.getString(name)));
+	        } else {
+	            firstChild = 2;
+	        }
         }
-
+        else {
+        	firstChild = hierarchy.length();
+        }
         ArrayList<NodeImpl> newChildren = new ArrayList<>();
         for (int i = firstChild; i < hierarchy.length(); i++) {
             JsonArray child = hierarchy.getArray(i);
