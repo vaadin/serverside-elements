@@ -33,7 +33,16 @@ window.org_vaadin_elements_ElementIntegration = function() {
 						var attributesToUpdate = boundAttributes[id][event];
 						for (var i = 0; i < attributesToUpdate.length; i++) {
 							var attribute = attributesToUpdate[i];
-							attributeChange = [+id, attribute, ""+ids[id][attribute]];
+							var valueToSend = ids[id][attribute];
+
+							// objects and arrays shall be sent as real json to be interpretable on the server side
+							if(valueToSend != null && typeof valueToSend === 'object') {
+								valueToSend = JSON.stringify(valueToSend);
+							} else {
+								valueToSend = "" + valueToSend;
+							}
+
+							attributeChange = [+id, attribute, valueToSend];
 							attributeChanges.push(attributeChange);
 						}
 					}
