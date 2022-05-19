@@ -5,12 +5,12 @@
 	<groupId>org.vaadin</groupId>
 	<artifactId>elements</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.3-SNAPSHOT</version>
 	<name>Elements Add-on</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
- 		<vaadin.version>8.0.5</vaadin.version>
+ 		<vaadin.version>8.14.1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
 		<!-- ZIP Manifest fields -->

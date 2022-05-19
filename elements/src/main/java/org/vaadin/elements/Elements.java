@@ -54,6 +54,6 @@ public class Elements {
 
     public static TextNode createText(String text) {
         return (TextNode) ElementReflectHelper
-                .wrap(new org.jsoup.nodes.TextNode(text, ""));
+                .wrap(new org.jsoup.nodes.TextNode(text));
     }
 }
