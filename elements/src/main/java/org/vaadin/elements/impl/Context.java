@@ -37,6 +37,7 @@ public class Context {
 
         while (!queue.isEmpty()) {
             Node soupChild = queue.poll();
+            // Only relevant for newer JSoup versions
             if (soupChild.childNodeSize() > 0) {
             	queue.addAll(soupChild.childNodes());
             }

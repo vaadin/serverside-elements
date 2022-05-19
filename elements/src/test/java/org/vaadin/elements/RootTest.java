@@ -1,5 +1,7 @@
 package org.vaadin.elements;
 
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.ContentMode;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,4 +72,21 @@ public class RootTest {
                 pendingCommands.toJson());
     }
 
+    @Test
+    public void fetchDOMWithLeafsWithoutAttributes() {
+        // set a callback for the synchronize
+        root.fetchDom(() -> {
+            Assert.assertEquals("<div></div>", root.asHtml());
+        });
+        JsonArray pendingCommands = root.flushPendingCommands();
+
+        // synchronize structure with no children and no attributes
+        root.synchronize(0, pendingCommands);
+    }
+
+    @Test
+    public void addLeafToRootNode() {
+         // Only relevant for newer JSoup versions
+         root.setInnerHtml("<span>Text-Leaf</span>");
+    }
 }
